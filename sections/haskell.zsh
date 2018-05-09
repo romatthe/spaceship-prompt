@@ -23,12 +23,12 @@ spaceship_haskell() {
   [[ $SPACESHIP_HASKELL_SHOW == false ]] && return
 
   # If there are stack files in current directory
-  [[ -f stack.yaml ]] || return
+  [[ -f stack.yaml || -n *.hs(#qN^/) ]] || return
 
   # The command is stack, so do not change this to haskell.
   spaceship::exists stack || return
 
-  local haskell_version=$(stack ghc -- --numeric-version --no-install-ghc)
+  local haskell_version=$(stack query | grep wanted | awk -F- '{print $2}')
 
   spaceship::section \
     "$SPACESHIP_HASKELL_COLOR" \
